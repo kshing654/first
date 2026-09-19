@@ -1,0 +1,469 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 🎂</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+
+  background:
+    radial-gradient(circle at top left, #4c1d95, transparent 40%),
+    radial-gradient(circle at bottom right, #0e7490, transparent 40%),
+    linear-gradient(135deg, #111827, #312e81, #172554);
+
+  overflow: hidden;
+}
+
+.card {
+  width: min(92%, 430px);
+  padding: 40px 30px;
+  text-align: center;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(15px);
+  border-radius: 28px;
+  box-shadow: 0 25px 70px rgba(0,0,0,.15);
+}
+
+.emoji {
+  font-size: 65px;
+  margin-bottom: 15px;
+  animation: float 2.5s ease-in-out infinite;
+}
+
+h1 {
+  color: #7c3aed;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #777;
+  margin-bottom: 25px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 7px 0;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #8b5cf6;
+}
+
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#ff4081,#8b5cf6);
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+#error {
+  display: none;
+  color: #e11d48;
+  margin-top: 12px;
+}
+
+#success {
+  display: none;
+}
+
+#success h2 {
+  font-size: clamp(2rem, 9vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+
+  background: linear-gradient(
+    90deg,
+    #ff4081,
+    #8b5cf6,
+    #ff9800,
+    #ff4081
+  );
+
+  background-size: 300%;
+
+  -webkit-background-clip: text;
+  color: transparent;
+
+  animation:
+    birthdayPop .9s ease forwards,
+    rainbow 3s linear infinite;
+}
+
+#successMessage {
+  margin-top: 18px;
+  font-size: 20px;
+  color: #6b21a8;
+  animation: fadeIn 1s ease;
+}
+
+#againButton {
+  margin-top: 22px;
+}
+
+.confetti {
+  position: fixed;
+  top: -25px;
+  width: 10px;
+  height: 18px;
+  z-index: 20;
+  pointer-events: none;
+  animation: fall linear forwards;
+}
+
+.balloon {
+  position: fixed;
+  bottom: -120px;
+  font-size: 55px;
+  z-index: 15;
+  pointer-events: none;
+  animation: balloonRise linear forwards;
+}
+
+@keyframes birthdayPop {
+  0% {
+    transform: scale(.1) rotate(-12deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.25) rotate(5deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: scale(.9) rotate(-2deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rainbow {
+  0% {
+    background-position: 0%;
+  }
+
+  50% {
+    background-position: 150%;
+  }
+
+  100% {
+    background-position: 300%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fall {
+  to {
+    transform:
+      translateY(110vh)
+      rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes balloonRise {
+  to {
+    transform:
+      translateY(-120vh)
+      rotate(15deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- LOGIN -->
+  <div id="login">
+
+    <div class="emoji">🔐</div>
+
+    <h1>Private Surprise</h1>
+
+    <p class="subtitle">
+      Enter your username and password 👀
+    </p>
+
+    <input
+      type="text"
+      id="username"
+      placeholder="Username"
+      autocomplete="off"
+    >
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+    >
+
+    <button onclick="checkLogin()">
+      Enter 🎁
+    </button>
+
+    <p id="error">
+      ❌ Wrong username or password
+    </p>
+
+  </div>
+
+
+  <!-- SUCCESS -->
+  <div id="success">
+
+    <div class="emoji">🎂</div>
+
+    <h2>
+      HAPPY<br>
+      BIRTHDAY! 🎉
+    </h2>
+
+    <p id="successMessage">
+      Happy birthday in advance. Plz treat advance. 🎂🎉
+    </p>
+
+    <button id="againButton" onclick="againAnimation()">
+      🎉 Again!
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const CORRECT_USERNAME = "admin";
+const CORRECT_PASSWORD = "1234";
+
+
+function checkLogin() {
+
+  const username =
+    document.getElementById("username").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const error =
+    document.getElementById("error");
+
+
+  if (
+    username === CORRECT_USERNAME &&
+    password === CORRECT_PASSWORD
+  ) {
+
+    document.getElementById("login").style.display =
+      "none";
+
+    document.getElementById("success").style.display =
+      "block";
+
+    /*
+      First celebration automatically
+    */
+
+    birthdayAnimation();
+
+  } else {
+
+    error.style.display = "block";
+
+  }
+}
+
+
+/*
+  Pressing Again triggers another
+  complete celebration.
+*/
+
+function againAnimation() {
+
+  birthdayAnimation();
+
+}
+
+
+/*
+  Each call creates a new batch
+  of confetti and balloons.
+*/
+
+function birthdayAnimation() {
+
+  createConfetti();
+  createBalloons();
+
+  setTimeout(createConfetti, 700);
+  setTimeout(createBalloons, 900);
+
+}
+
+
+/*
+  CONFETTI
+*/
+
+function createConfetti() {
+
+  const colors = [
+    "#ff4081",
+    "#8b5cf6",
+    "#06b6d4",
+    "#f59e0b",
+    "#22c55e",
+    "#ef4444",
+    "#ec4899"
+  ];
+
+
+  for (let i = 0; i < 100; i++) {
+
+    const piece =
+      document.createElement("div");
+
+    piece.className = "confetti";
+
+    piece.style.left =
+      Math.random() * 100 + "vw";
+
+    piece.style.background =
+      colors[
+        Math.floor(
+          Math.random() * colors.length
+        )
+      ];
+
+    piece.style.animationDuration =
+      (2 + Math.random() * 3) + "s";
+
+    piece.style.animationDelay =
+      Math.random() * .8 + "s";
+
+    piece.style.width =
+      (6 + Math.random() * 8) + "px";
+
+    piece.style.height =
+      (10 + Math.random() * 14) + "px";
+
+    document.body.appendChild(piece);
+
+
+    setTimeout(() => {
+      piece.remove();
+    }, 6000);
+
+  }
+}
+
+
+/*
+  BALLOONS
+*/
+
+function createBalloons() {
+
+  const balloons = [
+    "🎈",
+    "🎈",
+    "🎈",
+    "💖",
+    "🎈",
+    "🎈",
+    "🎈",
+    "💜"
+  ];
+
+
+  balloons.forEach((emoji, index) => {
+
+    const balloon =
+      document.createElement("div");
+
+    balloon.className = "balloon";
+
+    balloon.textContent = emoji;
+
+    balloon.style.left =
+      (3 + Math.random() * 94) + "vw";
+
+    balloon.style.animationDuration =
+      (5 + Math.random() * 4) + "s";
+
+    balloon.style.animationDelay =
+      (index * .15) + "s";
+
+    document.body.appendChild(balloon);
+
+
+    setTimeout(() => {
+      balloon.remove();
+    }, 10000);
+
+  });
+
+}
+
+</script>
+
+</body>
+</html>
+```
